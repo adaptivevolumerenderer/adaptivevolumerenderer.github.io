@@ -54,7 +54,7 @@
             <span class="author-block">
               <a>Yanke Song</a><sup>1</sup>,</span>
             <span class="author-block">
-              <a>Zelin Li</a><sup>2</sup>,</span>
+              <a>Zelin Li</a><sup>2</sup></span>
           </div>
 
           <div class="is-size-5 publication-authors">
@@ -154,6 +154,44 @@
       </div>
     </div>
     <!--/ Related Work. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Method. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Related Work</h2>
+        <div class="content has-text-justified">
+          
+          <p>
+            We propose an adapted version of differentiable ray marching algorithm that will first use ray marching long short-term memory (RM-LSTM) 
+            along the query ray to learn the adaptive step-length for the tracing algorithm. The goal of the RM-LSTM algorithm is to land in a 
+            neighborhood to the actual surface of the scene in order for the neural radiance field to learn the output. As an extension, we can 
+            sample points starting from that approximate intersection point predicted by the RM-LSTM algorithm with much smaller step sizes and 
+            perform volume rendering along those points. 
+          </p>
+          
+          <p>
+            We did our experiment by modifying the current structure of PixelNeRF. Instead of a standard volume rendering procedure, we extract the
+            latent features learned by the CNN encoder of PixelNeF and then feed the features as input into the RM-LSTM algorithm in the picture below.
+            Essentially, the RM-LSTM predicts the steplength on the ray of interest and update the depth. The RM-LSTM is set to have the number of feature 
+            channels being 512.We set the number of steps to be 30 in our experiments due to computational constraints. Once the depth is predicted, 
+            we add a regularization process which penalizes any unreasonable predicted depth, which we the range of reasonable depths to be between xx and xx. 
+            We then pass the output through the PixelNeRF process again to obtain rgb values with the neural network within PixelNeRF. In our experiments,
+            we use pretrained ResNet 34 model for the CNN encoder.
+          </p>
+          
+          <p>
+            For our extension, we did the same procedure as before up to the point where we do the regularization process. After the regularization, instead
+            of running through PixelNeRF again, we sample n = 16 points around +/-0.1 neighborhood of predicted depth and use standard volume rendering process to
+            calculate the final rgb value.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Method. -->
   </div>
 </section>
 
