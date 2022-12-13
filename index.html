@@ -90,49 +90,70 @@
       <div class="column is-four-fifths">
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
+          
           <p>
-            We present the first method capable of photorealistically reconstructing a non-rigidly
-            deforming scene using photos/videos captured casually from mobile phones.
-          </p>
-          <p>
-            Our approach augments neural radiance fields
-            (NeRF) by optimizing an
-            additional continuous volumetric deformation field that warps each observed point into a
-            canonical 5D NeRF.
-            We observe that these NeRF-like deformation fields are prone to local minima, and
-            propose a coarse-to-fine optimization method for coordinate-based models that allows for
-            more robust optimization.
-            By adapting principles from geometry processing and physical simulation to NeRF-like
-            models, we propose an elastic regularization of the deformation field that further
-            improves robustness.
-          </p>
-          <p>
-            We show that <span class="dnerf">Nerfies</span> can turn casually captured selfie
-            photos/videos into deformable NeRF
-            models that allow for photorealistic renderings of the subject from arbitrary
-            viewpoints, which we dub <i>"nerfies"</i>. We evaluate our method by collecting data
-            using a
-            rig with two mobile phones that take time-synchronized photos, yielding train/validation
-            images of the same pose at different viewpoints. We show that our method faithfully
-            reconstructs non-rigidly deforming scenes and reproduces unseen views with high
-            fidelity.
+          In this project, we explore a more efficient way of volume rendering given a neural scene representation. 
+          In specific, given a locally conditioned Neural Radiance Field introduced in PixelNeRF, we replace 
+          the evenly sampled points in their volume rendering procedure with adaptively sampled points to reduce
+          the time cost associated with the procedure. We obtain adaptively sampled points by first predict the approximate 
+          intersection between the query ray and the scene via the differentiable ray-marching technique using LSTM, and 
+          then evenly sample points with tiny steps. 
           </p>
         </div>
       </div>
     </div>
     <!--/ Abstract. -->
-
-    <!-- Paper video. -->
+  </div>
+</section>
+  
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Related Work. -->
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Video</h2>
-        <div class="publication-video">
-          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
-                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <h2 class="title is-3">Related Work</h2>
+        <div class="content has-text-justified">
+          
+          <p>
+            Our work is inspired by recent work in the field that focuses on predicting neural scene representation with one or few input images. 
+            We review the related work behind the key techniques in our project.
+          </p>
+          
+          <p>
+            <strong>Local Conditioning on Neural Radiance Fields</strong> PixelNeRF \cite{yu2021pixelnerf} augments Neural Radiance Field (NeRF) 
+            \cite{mildenhall2021nerf}, a 3D scene representation algorithm based on neural network, by including a fully convolutional 
+            image encoder to learn spatial image features that can be shared across scenes, as well as the local-conditioning technique 
+            that extract the local features by projecting the query points onto input images. 
+            Another line of work \cite{henzler2021unsupervised,reizenstein2021common} introduced similar techniques with different way 
+            of aggregating local features, and they refer this kind of technique as Wrap-Conditioned Embedding (WCE). 
+            Reizenstein et al.\cite{reizenstein2021common} also incorporates WCE into Scene Representation Network (SRN)\cite{sitzmann2019scene}, 
+            which showed a decent improvement in performance than the vanilla SRN and actually resulted in the best depth 
+            estimation results in their experiments.
+          </p>
+          
+          <p>
+            <strong>Aggregating projected features with Transformer</strong> When we apply WCE to multi-view inputs, we need to 
+            aggregate local features extracted from multiple query points on multiple views. PixelNeRF simply process each 
+            query point independently, and aggregate by averaging over multiple views. NerFormer instead uses a Transformer 
+            to process these features and produced better results. They argued that a Transformer (1) can learn to aggregate 
+            features from multiple views in a smart way and (2) is capable of spatial reasoning on multiple query points.
+          </p>
+
+          <p>
+            <strong>Differentiable Ray Marching</strong> Both PixelNeRF\cite{yu2021pixelnerf} and NerFormer\cite{reizenstein2021common} 
+            use volume rendering with evenly spaced points along the query ray, which might contain many points in empty spaces. 
+            Since volume rendering is a slow explicit rendering technique, this could result in wasteful computational resources. 
+            On the other hand, SRN\cite{sitzmann2019scene} uses a differentiable ray marching technique, which employs an LSTM to adaptively 
+            sample points along the query ray until it finds the intersection of the query ray with the scene. SRN then pass 
+            this intersection point through a pixel generator network that directly yields the color, instead of using volume rendering. 
+            Reizenstein et al.\cite{reizenstein2021common} shows that NerFormer performs better than SRN+WCE in many categories, 
+            possibly suggesting that volume rendering, although more expensive, produces better results than neural rendering.
+          </p>
+
         </div>
       </div>
     </div>
-    <!--/ Paper video. -->
+    <!--/ Related Work. -->
   </div>
 </section>
 
