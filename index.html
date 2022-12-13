@@ -93,10 +93,10 @@
           
           <p>
           In this project, we explore a more efficient way of volume rendering given a neural scene representation. 
-          In specific, given a locally conditioned Neural Radiance Field introduced in PixelNeRF, we replace 
+          In specific, given a locally conditioned Neural Radiance Field introduced in PixelNeRF [6], we replace 
           the evenly sampled points in their volume rendering procedure with adaptively sampled points to reduce
           the time cost associated with the procedure. We obtain adaptively sampled points by first predict the approximate 
-          intersection between the query ray and the scene via the differentiable ray-marching technique using LSTM, and 
+          intersection between the query ray and the scene via the differentiable ray-marching technique [4] using LSTM, and 
           then evenly sample points with tiny steps. 
           </p>
         </div>
@@ -120,13 +120,13 @@
           </p>
           
           <p>
-            <strong>Local Conditioning on Neural Radiance Fields</strong> PixelNeRF \cite{yu2021pixelnerf} augments Neural Radiance Field (NeRF) 
-            \cite{mildenhall2021nerf}, a 3D scene representation algorithm based on neural network, by including a fully convolutional 
+            <strong>Local Conditioning on Neural Radiance Fields</strong> PixelNeRF [6] augments Neural Radiance Field (NeRF) [2], 
+            a 3D scene representation algorithm based on neural network, by including a fully convolutional 
             image encoder to learn spatial image features that can be shared across scenes, as well as the local-conditioning technique 
             that extract the local features by projecting the query points onto input images. 
-            Another line of work \cite{henzler2021unsupervised,reizenstein2021common} introduced similar techniques with different way 
+            Another line of work [1, 3] introduced similar techniques with different way 
             of aggregating local features, and they refer this kind of technique as Wrap-Conditioned Embedding (WCE). 
-            Reizenstein et al.\cite{reizenstein2021common} also incorporates WCE into Scene Representation Network (SRN)\cite{sitzmann2019scene}, 
+            Reizenstein et al. [3] also incorporates WCE into Scene Representation Network (SRN) [4], 
             which showed a decent improvement in performance than the vanilla SRN and actually resulted in the best depth 
             estimation results in their experiments.
           </p>
@@ -140,13 +140,13 @@
           </p>
 
           <p>
-            <strong>Differentiable Ray Marching</strong> Both PixelNeRF \cite{yu2021pixelnerf} and NerFormer \cite{reizenstein2021common} 
+            <strong>Differentiable Ray Marching</strong> Both PixelNeRF [6] and NerFormer [3]
             use volume rendering with evenly spaced points along the query ray, which might contain many points in empty spaces. 
             Since volume rendering is a slow explicit rendering technique, this could result in wasteful computational resources. 
-            On the other hand, SRN\cite{sitzmann2019scene} uses a differentiable ray marching technique, which employs an LSTM to adaptively 
+            On the other hand, SRN [4] uses a differentiable ray marching technique, which employs an LSTM to adaptively 
             sample points along the query ray until it finds the intersection of the query ray with the scene. SRN then pass 
             this intersection point through a pixel generator network that directly yields the color, instead of using volume rendering. 
-            Reizenstein et al.\cite{reizenstein2021common} shows that NerFormer performs better than SRN+WCE in many categories, 
+            Reizenstein et al. [3] shows that NerFormer performs better than SRN+WCE in many categories, 
             possibly suggesting that volume rendering, although more expensive, produces better results than neural rendering.
           </p>
 
