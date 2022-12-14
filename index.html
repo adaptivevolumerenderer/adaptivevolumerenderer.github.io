@@ -147,7 +147,7 @@
             sample points along the query ray until it finds the intersection of the query ray with the scene. SRN then pass 
             this intersection point through a pixel generator network that directly yields the color, instead of using volume rendering. 
             Reizenstein et al. [3] shows that NerFormer performs better than SRN+WCE in many categories, 
-            possibly suggesting that volume rendering, although more expensive, produces better results than neural rendering.
+            possibly suggesting that volume rendering, although more expensive, produces better results than ray marching.
           </p>
 
         </div>
@@ -177,21 +177,20 @@
             We did our experiment by modifying the current structure of PixelNeRF. Instead of a standard volume rendering procedure, we extract the
             latent features learned by the CNN encoder of PixelNeF and then feed the features as input into the RM-LSTM algorithm in the picture below.
             Essentially, the RM-LSTM predicts the steplength on the ray of interest and update the depth. The RM-LSTM is set to have the number of feature 
-            channels being 512. We set the number of steps to be 30 in our experiments due to computational constraints. Once the depth is predicted, 
-            we add a regularization process which penalizes any unreasonable predicted depth, which we set the range of reasonable depths within the 
-            near plane and far plane. The current values we use in our experiment is 0.5 and 2.0 for near plane and far plane, respectively.
-            We then pass the output through the PixelNeRF process again to obtain rgb values with the neural network within PixelNeRF. In our experiments,
-            we use pretrained ResNet 34 model for the CNN encoder. We denote this structure as Raymarcher.
+            channels being 512. We set the number of steps to be 10 in our experiments due to computational constraints.  
+            We then pass the output through the whole PixelNeRF network again to obtain rgb values. 
+            In order to guide the initial convergence process of LSTM, we add a regularization term to the usual MSE reconstruction loss by penalizing any final
+            depth outside 0.5 (near plane) and 2.0 (far plane).
+            In our experiments, we use pretrained ResNet 34 model for the CNN encoder. We denote this structure as Raymarcher.
           </p>
           
           <p>
-            For our extension, we did the same procedure as before up to the point where we do the regularization process. After the regularization, instead
-            of running through PixelNeRF again, we sample n = 10 points around +/-0.15 neighborhood of predicted depth and use standard volume rendering process to
-            calculate the final rgb value. We denote this structure as Adaptive Volume Renderer (AVR).
+            For our extension, we did the same procedure as before up to the point where LSTM outputs the final depth. Now instead of extracting rgb values 
+            from PixelNeRF on this single point, we sample n = 10 points around +/-0.15 neighborhood of predicted depth and use standard volume rendering process to
+            calculate the final rgb value. We denote this structure as AdaptiveVolumeRenderer (AVR).
           </p>
           
-          <img src = "https://drive.google.com/uc?export=view&id=1cMlCJJ_9cOKiTqP28bFOJ_CaEU8MaDYt" alt = "Model Architecture">
-          
+          <img src = "https://drive.google.com/uc?export=view&id=1xIeSn6BXNHeJEWuJbf_fX-xQqlxNauuA" alt = "Model Architecture">
         </div>
       </div>
     </div>
@@ -209,15 +208,15 @@
           
           <p> 
             In our experiment, we compare our two models, Raymarcher and Adaptive Volume Renderer, against a baseline that uses standard volume rendering
-            with PixelNeRF, where we take the existing model and fine-tune for 40,000 steps. The number of coarse points we sample for this process is set to be 32, 
-            and we do not utilize fine points sampling as implemented by the original PixelNeRF repository given time constraints. For Raymarcher and
-            Adapative Volume Renderer, we train the whole model for 400,000 steps.
+            with PixelNeRF, where we take the pretrained weights and fine-tune for 40k steps. The number of coarse points we sample for this process is set to be 32, 
+            and we do not utilize fine points sampling as implemented by the original PixelNeRF repository given time constraints. We train Raymarcher on top
+            of the final weights from baseline for 400k steps. We further train Adaptive Volume Renderer on top of the final weights from Raymarcher for 40k steps.
           </p>
           
           <p>
-            We evaluate our models on ShapeNet cars dataset, where the training set contains 2150 cars with resolution 32 and batch size 8
-            and the test set contains 352 views and is reconstructed using single-view. We compare the performance using PSNR, SSIM [5], 
-            the rendering speed, and videos of produced output. The results are shown below.
+            We evaluate our models on ShapeNet cars dataset, where the training set contains 2150 cars with resolution 32 and 8 views per scene, 1 of them randomly
+            selected as the input/source view. We then test on 352 cars for single-view reconstruction, using an informative input view (view 64). 
+            We compare the performance using PSNR, SSIM [5], the rendering speed, and videos of produced output. The results are shown below.
             
           </p>
           
@@ -264,9 +263,7 @@
             <p>
               As we can see, Raymarcher has comparable results with the standard Volume Rendering process, but has rendering speed ~4x faster.
               Adaptive Volume Renderer outperforms both Raymarcher and Baseline on both PSNR and SSIM and has rendering speed ~2x faster comparing
-              againast baseline. It should be noted that we only use 32 coarse points sampling for our volume rendering process instead of the
-              64 coarse points as implemented by the original PixelNeRF; thus, the current results underestimate the potential efficiency we can
-              achieve. 
+              againast baseline. 
              </p>
           </div>
           
@@ -287,7 +284,7 @@
           
           <p>
             We would like to run our models using better resolution and on multiple datasets as our results are currently limited by the 
-            computational constraints we face. We would also like to compare our models against coarse and fine sampling of volume renderer 
+            computational constraints we face. We would also like to compare our models against coarse + fine sampling of volume renderer 
             in PixelNeRF. An additional next step would be replacing the decoder in the process by a Transformer so that we can aggregate the
             sampled features in a more clever way when we have multi-views.
           </p>
