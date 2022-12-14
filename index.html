@@ -95,7 +95,7 @@
           In this project, we explore a more efficient way of volume rendering given a neural scene representation. 
           In specific, given a locally conditioned Neural Radiance Field introduced in PixelNeRF [6], we replace 
           the evenly sampled points in their volume rendering procedure with adaptively sampled points to reduce
-          the time cost associated with the procedure. We obtain adaptively sampled points by first predict the approximate 
+          the time cost associated with the procedure. We obtain adaptively sampled points by first predicting the approximate 
           intersection between the query ray and the scene via the differentiable ray-marching technique [4] using LSTM, and 
           then evenly sample points with tiny steps. 
           </p>
@@ -177,8 +177,9 @@
             We did our experiment by modifying the current structure of PixelNeRF. Instead of a standard volume rendering procedure, we extract the
             latent features learned by the CNN encoder of PixelNeF and then feed the features as input into the RM-LSTM algorithm in the picture below.
             Essentially, the RM-LSTM predicts the steplength on the ray of interest and update the depth. The RM-LSTM is set to have the number of feature 
-            channels being 512.We set the number of steps to be 30 in our experiments due to computational constraints. Once the depth is predicted, 
-            we add a regularization process which penalizes any unreasonable predicted depth, which we the range of reasonable depths to be between xx and xx. 
+            channels being 512. We set the number of steps to be 30 in our experiments due to computational constraints. Once the depth is predicted, 
+            we add a regularization process which penalizes any unreasonable predicted depth, which we set the range of reasonable depths within the 
+            near plane and far plane. The current values we use in our experiment is 0.5 and 2.0 for near plane and far plane, respectively.
             We then pass the output through the PixelNeRF process again to obtain rgb values with the neural network within PixelNeRF. In our experiments,
             we use pretrained ResNet 34 model for the CNN encoder. We denote this structure as Raymarcher.
           </p>
@@ -186,7 +187,7 @@
           <p>
             For our extension, we did the same procedure as before up to the point where we do the regularization process. After the regularization, instead
             of running through PixelNeRF again, we sample n = 10 points around +/-0.15 neighborhood of predicted depth and use standard volume rendering process to
-            calculate the final rgb value. We denote this structure as AdaptiveVolumeRenderer (AVR).
+            calculate the final rgb value. We denote this structure as Adaptive Volume Renderer (AVR).
           </p>
           
           <img src = "https://drive.google.com/uc?export=view&id=1xIeSn6BXNHeJEWuJbf_fX-xQqlxNauuA" alt = "Model Architecture">
@@ -205,6 +206,20 @@
         <h2 class="title is-3">Results</h2>
         <div class="content has-text-justified">
           
+          <p> 
+            In our experiment, we compare our two models, Raymarcher and Adaptive Volume Renderer, against a baseline that uses standard volume rendering
+            with PixelNeRF, where we take the existing model and fine-tune for 40,000 steps. The number of coarse points we sample for this process is set to be 32, 
+            and we do not utilize fine points sampling as implemented by the original PixelNeRF repository given time constraints. For Raymarcher and
+            Adapative Volume Renderer, we train the whole model for 400,000 steps.
+          </p>
+          
+          <p>
+            We evaluate our models on ShapeNet cars dataset, where the training set contains 2150 cars with resolution 32 and batch size 8
+            and the test set contains 352 views and is reconstructed using single-view. We compare the performance using PSNR, SSIM [5], 
+            the rendering speed, and videos of produced output. The results are shown below.
+            
+          </p>
+          
            <div class="row">
             <div class="column">
               <div class="column content">
@@ -214,7 +229,8 @@
                <img src = "https://drive.google.com/uc?export=view&id=1DClLudB1Rm_5ZtEStr3iujMafKMpke9A" 
                     alt = "Volume Rendering Output (Baseline)"
                     width = "200"
-                    height = "200">
+                    height = "200"
+                    class="center">
               </div>
             </div>
 
@@ -226,7 +242,8 @@
                <img src = "https://drive.google.com/uc?export=view&id=1QxbOh9THMv4KdpInRkar3F_efSaCj1Lg" 
                     alt = "Raymarcher Output"
                     width = "200"
-                    height = "200">
+                    height = "200"
+                    class="center">
               </div>
             </div>
 
@@ -238,15 +255,46 @@
                <img src = "https://drive.google.com/uc?export=view&id=1xjmkLpDzKDmQ3qq8F6ALg4rWAiEertkJ" 
                     alt = "AVR Output"
                     width = "200"
-                    height = "200">
+                    height = "200"
+                    class="center">
               </div>
             </div>
+             
+            <p>
+              As we can see, Raymarcher has comparable results with the standard Volume Rendering process, but has rendering speed ~4x faster.
+              Adaptive Volume Renderer outperforms both Raymarcher and Baseline on both PSNR and SSIM and has rendering speed ~2x faster comparing
+              againast baseline. It should be noted that we only use 32 coarse points sampling for our volume rendering process instead of the
+              64 coarse points as implemented by the original PixelNeRF; thus, the current results underestimate the potential efficiency we can
+              achieve. 
+             </p>
           </div>
           
         </div>
       </div>
     </div>
     <!--/ Results. -->
+  </div>
+</section>
+  
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Next Steps. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Next Steps</h2>
+        <div class="content has-text-justified">
+          
+          <p>
+            We would like to run our models using better resolution and on multiple datasets as our results are currently limited by the 
+            computational constraints we face. We would also like to compare our models against coarse and fine sampling of volume renderer 
+            in PixelNeRF. An additional next step would be replacing the decoder in the process by a Transformer so that we can aggregate the
+            sampled features in a more clever way when we have multi-views.
+          </p>
+         
+        </div>
+      </div>
+    </div>
+    <!--/ Next Steps. -->
   </div>
 </section>
 
