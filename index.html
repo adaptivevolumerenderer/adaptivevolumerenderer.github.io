@@ -185,7 +185,7 @@
           
           <p>
             For our extension, we did the same procedure as before up to the point where we do the regularization process. After the regularization, instead
-            of running through PixelNeRF again, we sample n = 16 points around +/-0.1 neighborhood of predicted depth and use standard volume rendering process to
+            of running through PixelNeRF again, we sample n = 10 points around +/-0.15 neighborhood of predicted depth and use standard volume rendering process to
             calculate the final rgb value. We denote this structure as AdaptiveVolumeRenderer (AVR).
           </p>
           
@@ -209,7 +209,7 @@
             <div class="column">
               <div class="column content">
                 <p>
-                  <strong>Volume Rendering Output (Baseline)</strong>
+                  <strong>Volume Rendering (Baseline): PSNR: 22.01, SSIM: 0.8314, Rendering Speed: 4.82fps</strong>
                 </p>
                <img src = "https://drive.google.com/uc?export=view&id=1DClLudB1Rm_5ZtEStr3iujMafKMpke9A" 
                     alt = "Volume Rendering Output (Baseline)"
@@ -218,12 +218,24 @@
               </div>
             </div>
 
-             <div class="column">
+            <div class="column">
               <div class="column content">
                 <p>
-                  <strong>Raymarcher Output</strong>
+                  <strong>Raymarcher: PSNR: 22.11, SSIM: 0.7974, Rendering Speed: 19.5fps</strong>
                 </p>
                <img src = "https://drive.google.com/uc?export=view&id=1QxbOh9THMv4KdpInRkar3F_efSaCj1Lg" 
+                    alt = "Raymarcher Output"
+                    width = "200"
+                    height = "200">
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="column content">
+                <p>
+                  <strong>Adaptive Volume Renderer: PSNR: 23.36, SSIM: 0.8651, Rendering Speed: 9.03 fps</strong>
+                </p>
+               <img src = "https://drive.google.com/uc?export=view&id=1Bi0MteNCymcewiyK7IaJ6oJ3hFZLlGBK" 
                     alt = "Raymarcher Output"
                     width = "200"
                     height = "200">
