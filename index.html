@@ -283,6 +283,9 @@
           
           <p>
             For the full 128 by 128 resolution, we compared both Raymarcher and AVR with the fine + coarse sampling version of Volume Rendering in PixelNeRF.
+            For VR, we directly used PixelNeRF's pretrained weights. We initialized the raymarcher for 10 steps, and for AVR we sampled 20 points around +/-0.15 neighborhood
+            around the final depth from Raymarcher. We trained both the Raymarcher and AVR together from the pretrained weights of PixelNeRF. We trained with a batch size
+            of 4 scenes, sampling 512 rays randomly from all training views for each scene. We trained the model for 300 epochs (183000 iterations).
             See the results below:
           </p>
 
@@ -325,6 +328,10 @@
                     class="center">
               </div>
             </div>
+            <p>
+              some explanation 
+             </p>
+          </div>
          
         </div>
       </div>
