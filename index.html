@@ -282,41 +282,16 @@
         <div class="content has-text-justified">
           
           <p>
+            We would like to run our models using better resolution and on multiple datasets as our results are currently limited by the 
+            computational constraints we face. We would also like to compare our models against coarse + fine sampling of volume renderer 
+            in PixelNeRF. An additional next step would be replacing the decoder in the process by a Transformer so that we can aggregate the
+            sampled features in a more clever way when we have multi-views.
             For the full 128 by 128 resolution, we compared both Raymarcher and AVR with the fine + coarse sampling version of Volume Rendering in PixelNeRF.
             For VR, we directly used PixelNeRF's pretrained weights. We initialized the raymarcher for 10 steps, and for AVR we sampled 20 points around +/-0.15 neighborhood
             around the final depth from Raymarcher. We trained both the Raymarcher and AVR together from the pretrained weights of PixelNeRF. We trained with a batch size
             of 4 scenes, sampling 512 rays randomly from all training views for each scene. We trained the model for 300 epochs (183000 iterations).
             See the results below:
           </p>
-
-          <div class="row">
-            <div class="column">
-              <div class="column content">
-                <p>
-                  <strong>Volume Rendering (Baseline): PSNR: 22.01, SSIM: 0.8314, Rendering Speed: 4.82fps</strong>
-                </p>
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="column content">
-                <p>
-                  <strong>Raymarcher: PSNR: 22.11, SSIM: 0.7974, Rendering Speed: 19.5fps</strong>
-                </p>
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="column content">
-                <p>
-                  <strong>Adaptive Volume Renderer: PSNR: 23.36, SSIM: 0.8651, Rendering Speed: 9.03 fps</strong>
-                </p>
-              </div>
-            </div>
-            <p>
-              some explanation 
-             </p>
-          </div>
          
         </div>
       </div>
