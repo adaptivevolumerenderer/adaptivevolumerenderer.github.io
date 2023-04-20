@@ -218,14 +218,14 @@
             We compare the performance using PSNR, SSIM [5], the rendering speed, and videos of produced output. The results are shown below.
             
           </p>
-          
-           <div class="row">
+
+          <div class="row">
             <div class="column">
               <div class="column content">
                 <p>
-                  <strong>Volume Rendering (Baseline): PSNR: 22.01, SSIM: 0.8314, Rendering Speed: 4.82fps</strong>
+                  <strong>Volume Rendering (baseline)</strong>
                 </p>
-               <img src = "https://drive.google.com/uc?export=view&id=1DClLudB1Rm_5ZtEStr3iujMafKMpke9A" 
+               <img src = "https://drive.google.com/uc?export=view&id=11qAz84kdEFOTFVWqgUPcr_seqRr6HWRE" 
                     alt = "Volume Rendering Output (Baseline)"
                     width = "200"
                     height = "200"
@@ -236,9 +236,9 @@
             <div class="column">
               <div class="column content">
                 <p>
-                  <strong>Raymarcher: PSNR: 22.11, SSIM: 0.7974, Rendering Speed: 19.5fps</strong>
+                  <strong>Raymarcher</strong>
                 </p>
-               <img src = "https://drive.google.com/uc?export=view&id=1QxbOh9THMv4KdpInRkar3F_efSaCj1Lg" 
+               <img src = "https://drive.google.com/uc?export=view&id=1UBhqsxIq26Ti2nc-W_VyEmgdr3AnPQTQ" 
                     alt = "Raymarcher Output"
                     width = "200"
                     height = "200"
@@ -249,15 +249,17 @@
             <div class="column">
               <div class="column content">
                 <p>
-                  <strong>Adaptive Volume Renderer: PSNR: 23.36, SSIM: 0.8651, Rendering Speed: 9.03 fps</strong>
+                  <strong>Adaptive Volume Renderer</strong>
                 </p>
-               <img src = "https://drive.google.com/uc?export=view&id=1xjmkLpDzKDmQ3qq8F6ALg4rWAiEertkJ" 
+               <img src = "https://drive.google.com/uc?export=view&id=1xWMSWUNbHTq2srFG2N08QXzFJZxlR5of" 
                     alt = "AVR Output"
                     width = "200"
                     height = "200"
                     class="center">
               </div>
             </div>
+             
+          </div>
              
             <p>
               As we can see, Raymarcher has comparable results with the standard Volume Rendering process, but has rendering speed ~4x faster.
@@ -288,48 +290,6 @@
             of 4 scenes, sampling 512 rays randomly from all training views for each scene. We trained the model for 300 epochs (183000 iterations).
             See the results below: 
           </p>
-
-          <div class="row">
-            <div class="column">
-              <div class="column content">
-                <p>
-                  <strong>Volume Rendering (baseline): psnr = 23.33842, ssim = 0.90478, lpips = 0.11172, rendering speed: 0.45fps</strong>
-                </p>
-               <img src = "https://drive.google.com/uc?export=view&id=1r_5pbv-9dki-4gStSE8QvICkLBYr8ska" 
-                    alt = "Volume Rendering Output (Baseline)"
-                    width = "200"
-                    height = "200"
-                    class="center">
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="column content">
-                <p>
-                  <strong>Raymarcher: psnr = 22.45226, ssim = 0.88847, lpips = 0.14819, Rendering Speed: 25.05fps</strong>
-                </p>
-               <img src = "https://drive.google.com/uc?export=view&id=17eY3lf0Bkn8s_K5g9lpLjws13OnGDaqg" 
-                    alt = "Raymarcher Output"
-                    width = "200"
-                    height = "200"
-                    class="center">
-              </div>
-            </div>
-
-            <div class="column">
-              <div class="column content">
-                <p>
-                  <strong>Adaptive Volume Renderer: psnr = 23.10174, ssim = 0.90321, lpips = 0.11648, Rendering Speed: 3.28 fps</strong>
-                </p>
-               <img src = "https://drive.google.com/uc?export=view&id=1xy-U0Hi2eLJ5ZV3Q7nYf5cKkZVmRRpEA" 
-                    alt = "AVR Output"
-                    width = "200"
-                    height = "200"
-                    class="center">
-              </div>
-            </div>
-             
-          </div>
          
         </div>
       </div>
