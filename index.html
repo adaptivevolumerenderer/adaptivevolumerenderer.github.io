@@ -168,14 +168,14 @@
           <p>
             We propose an adapted version of differentiable ray marching algorithm that will first use ray marching long short-term memory (RM-LSTM) 
             along the query ray to learn the adaptive step-length for the tracing algorithm. The goal of the RM-LSTM algorithm is to land in a 
-            neighborhood to the actual surface of the scene in order for the neural radiance field to learn the output. As an extension, we can 
-            sample points starting from that approximate intersection point predicted by the RM-LSTM algorithm with much smaller step sizes and 
+            neighborhood to the actual surface of the scene in order for the neural radiance field to learn the output. As this point, we can either directly
+            output a color or, as a better alternative, sample points around the terminal point predicted by the RM-LSTM algorithm with much smaller step sizes and 
             perform volume rendering along those points. 
           </p>
           
           <p>
             We did our experiment by modifying the current structure of PixelNeRF. Instead of a standard volume rendering procedure, we extract the
-            latent features learned by the CNN encoder of PixelNeF and then feed the features as input into the RM-LSTM algorithm in the picture below.
+            latent features learned by the CNN encoder of PixelNeRF and then feed the features as input into the RM-LSTM algorithm in the picture below.
             Essentially, the RM-LSTM predicts the steplength on the ray of interest and update the depth. The RM-LSTM is set to have the number of feature 
             channels being 512. We set the number of steps to be 10 in our experiments due to computational constraints.  
             We then pass the output through the whole PixelNeRF network again to obtain rgb values. 
@@ -186,7 +186,7 @@
           
           <p>
             For our extension, we did the same procedure as before up to the point where LSTM outputs the final depth. Now instead of extracting rgb values 
-            from PixelNeRF on this single point, we sample n = 10 points around +/-0.15 neighborhood of predicted depth and use standard volume rendering process to
+            from PixelNeRF on this single point, we sample n = 10 points around +/-0.05 neighborhood of predicted depth and use standard volume rendering process to
             calculate the final rgb value. We denote this structure as AdaptiveVolumeRenderer (AVR).
           </p>
           <img src = "https://drive.google.com/uc?export=view&id=1BleKMk4jOASjC4X5Np7CbZgqsPXfD5rh" alt = "Model Architecture">
@@ -207,9 +207,8 @@
           
           <p> 
             In our experiment, we compare our two models, Raymarcher and Adaptive Volume Renderer, against a baseline that uses standard volume rendering
-            with PixelNeRF, where we take the pretrained weights and fine-tune for 40k steps. The number of coarse points we sample for this process is set to be 32, 
-            and we do not utilize fine points sampling as implemented by the original PixelNeRF repository given time constraints. We train Raymarcher on top
-            of the final weights from baseline for 400k steps. We further train Adaptive Volume Renderer on top of the final weights from Raymarcher for 40k steps.
+            with PixelNeRF. We train the Raymarcher as well as the AVR simultaneously as two networks that shares the same PixelNeRF encoder. We use the pretrained weights
+            from PixelNeRF and fine tune for 200k steps.
           </p>
           
           <p>
@@ -223,7 +222,7 @@
             <div class="column">
               <div class="column content">
                 <p>
-                  <strong>Volume Rendering (baseline)</strong>
+                  <strong>Volume Rendering (baseline). PSNR: 23.34. SSIM: 0.9048. LPIPS: 0.111. Rendering speed: 0.4 fps.</strong>
                 </p>
                <img src = "https://drive.google.com/uc?export=view&id=11qAz84kdEFOTFVWqgUPcr_seqRr6HWRE" 
                     alt = "Volume Rendering Output (Baseline)"
@@ -236,7 +235,7 @@
             <div class="column">
               <div class="column content">
                 <p>
-                  <strong>Raymarcher</strong>
+                  <strong>Raymarcher. PSNR: 23.02. SSIM: 0.9013. LPIPS: 0.137. Rendering speed: 34.9 fps.</strong>
                 </p>
                <img src = "https://drive.google.com/uc?export=view&id=1UBhqsxIq26Ti2nc-W_VyEmgdr3AnPQTQ" 
                     alt = "Raymarcher Output"
@@ -249,7 +248,7 @@
             <div class="column">
               <div class="column content">
                 <p>
-                  <strong>Adaptive Volume Renderer</strong>
+                  <strong>Adaptive Volume Renderer. PSNR: 23.22. SSIM: 0.9056. LPIPS: 0.108. Rendering speed: 4.2 fps.</strong>
                 </p>
                <img src = "https://drive.google.com/uc?export=view&id=1xWMSWUNbHTq2srFG2N08QXzFJZxlR5of" 
                     alt = "AVR Output"
@@ -262,9 +261,8 @@
           </div>
              
             <p>
-              As we can see, Raymarcher has comparable results with the standard Volume Rendering process, but has rendering speed ~4x faster.
-              Adaptive Volume Renderer outperforms both Raymarcher and Baseline on both PSNR and SSIM and has rendering speed ~2x faster comparing
-              againast baseline. 
+              As we can see, compared with the standard Volume Rendering procedure, Adaptive Volume Renderer achieves comparable results ~7 tims faster. Raymarcher
+              achieves a even better ~80 times speed up with a slight decrease in rendering quality.
              </p>
           </div>
           
@@ -280,15 +278,14 @@
     <!-- Next Steps. -->
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">High Resolution Comparison</h2>
+        <h2 class="title is-3">Conclusion and Future Work</h2>
         <div class="content has-text-justified">
           
           <p>
-            For the full 128 by 128 resolution, we compared both Raymarcher and AVR with the fine + coarse sampling version of Volume Rendering in PixelNeRF.
-            For VR, we directly used PixelNeRF's pretrained weights. We initialized the raymarcher for 10 steps, and for AVR we sampled 20 points around +/-0.15 neighborhood
-            around the final depth from Raymarcher. We trained both the Raymarcher and AVR together from the pretrained weights of PixelNeRF. We trained with a batch size
-            of 4 scenes, sampling 512 rays randomly from all training views for each scene. We trained the model for 300 epochs (183000 iterations).
-            See the results below: 
+            In this project, we proposed and implemented two rendering procedures for a locally conditioned NeRF that are more efficient. AVR achieves comparable quality with a 
+            noticeable speed up whereas Raymarcher achieves a considerable speed up with a slight decrease in quality. 
+
+            For future work, we want to investigate whether this techniques can be conveniently combined with other techniques that aims to speed up NeRF.
           </p>
          
         </div>
